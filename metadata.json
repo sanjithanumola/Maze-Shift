@@ -1,0 +1,6 @@
+{
+  "name": "MazeShift — Advanced Procedural Puzzle Game",
+  "description": "A premium procedural maze puzzle game with dynamic camera, multi-tier puzzle mechanics, keys, traps, teleporters, fog-of-war, and cyber-pulse synthesized audio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
