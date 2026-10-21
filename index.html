@@ -2,13 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>MazeShift — Advanced Procedural Puzzle Game</title>
   <meta name="description" content="A premium procedural maze puzzle game with dynamic camera, multi-tier puzzle mechanics, keys, traps, teleporters, fog-of-war, and cyber-pulse synthesized audio.">
   <meta property="og:title" content="MazeShift — Advanced Procedural Puzzle Game">
   <meta property="og:description" content="Navigate procedural labyrinths, solve multi-tier puzzles, beat the clock, and master the shift.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Mobile & PWA compliance -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MazeShift">
+  <meta name="theme-color" content="#070b14">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="apple-touch-icon" href="/icon.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,6 +42,10 @@
       --text-dim: #64748b;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
     }
 
     * {
@@ -57,6 +71,10 @@
       flex-direction: column;
       position: relative;
       background: radial-gradient(circle at 50% 20%, #111e3b 0%, #070b14 75%);
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
     }
 
     /* Ambient animated grid backdrop */
@@ -75,13 +93,13 @@
     header.game-header {
       position: relative;
       z-index: 20;
-      height: 56px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 0 16px;
-      background: rgba(13, 21, 39, 0.85);
+      gap: 12px;
+      padding: 0 14px;
+      background: rgba(13, 21, 39, 0.88);
       border-bottom: 1px solid var(--border-subtle);
       backdrop-filter: blur(12px);
       flex-shrink: 0;
@@ -91,7 +109,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--text-main);
@@ -120,20 +138,20 @@
     .hud-metrics {
       display: flex;
       align-items: center;
-      gap: 16px;
-      font-size: 0.82rem;
+      gap: 14px;
+      font-size: 0.8rem;
       font-weight: 600;
     }
 
     .metric-item {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       color: var(--text-muted);
     }
     .metric-value {
       font-family: var(--font-mono);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: var(--text-main);
       font-variant-numeric: tabular-nums;
     }
@@ -151,16 +169,16 @@
     .key-inventory {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 2px 8px;
+      gap: 5px;
+      padding: 2px 6px;
       background: rgba(255, 255, 255, 0.04);
       border-radius: 6px;
       border: 1px solid var(--border-subtle);
-      min-height: 28px;
+      min-height: 26px;
     }
     .key-slot {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       border-radius: 50%;
       border: 1.5px dashed var(--text-dim);
       display: flex;
@@ -184,11 +202,11 @@
       box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
     }
 
-    /* HUD buttons */
+    /* Desktop HUD buttons */
     .hud-controls {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .btn-hud {
@@ -196,13 +214,13 @@
       align-items: center;
       justify-content: center;
       gap: 5px;
-      height: 32px;
-      padding: 0 10px;
+      height: 30px;
+      padding: 0 8px;
       border-radius: 6px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-subtle);
       color: var(--text-main);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -227,7 +245,7 @@
       position: relative;
       flex: 1;
       width: 100%;
-      height: calc(100% - 56px);
+      height: calc(100% - 52px);
       overflow: hidden;
       z-index: 5;
     }
@@ -244,7 +262,7 @@
     /* Floating Toast / Notification */
     #toast-banner {
       position: absolute;
-      top: 16px;
+      top: 14px;
       left: 50%;
       transform: translateX(-50%) translateY(-20px);
       padding: 8px 16px;
@@ -252,7 +270,7 @@
       border: 1px solid var(--border-accent);
       border-radius: 8px;
       color: var(--text-main);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
       opacity: 0;
@@ -272,19 +290,20 @@
     /* Mini-Map Radar */
     #minimap-card {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
+      top: 16px;
+      right: 16px;
       background: rgba(10, 16, 30, 0.88);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 8px;
+      padding: 6px;
       backdrop-filter: blur(10px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
       z-index: 25;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       transition: opacity 0.2s ease, transform 0.2s ease;
+      cursor: pointer;
     }
     #minimap-card.hidden {
       opacity: 0;
@@ -295,64 +314,122 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 700;
       color: var(--text-dim);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
     #minimapCanvas {
-      width: 140px;
-      height: 140px;
+      width: 120px;
+      height: 120px;
       border-radius: 4px;
       background: #04070e;
       display: block;
     }
 
-    /* Mobile Touch D-Pad */
+    /* Mobile Floating Thumb Quick Actions */
+    #mobile-quick-hub {
+      position: absolute;
+      right: 16px;
+      bottom: 24px;
+      z-index: 25;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-mobile-quick {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-accent);
+      color: var(--cyan-neon);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+    .btn-mobile-quick:active {
+      transform: scale(0.92);
+      background: rgba(0, 240, 255, 0.25);
+    }
+    .btn-mobile-quick span.btn-sub {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: -2px;
+      text-transform: uppercase;
+    }
+
+    /* Tactile Mobile Virtual D-Pad (Ergonomic Circle) */
     #touch-dpad {
       position: absolute;
       bottom: 24px;
-      left: 24px;
-      width: 140px;
-      height: 140px;
+      left: 18px;
+      width: 148px;
+      height: 148px;
       z-index: 25;
-      display: none; /* activated on touch or via settings */
+      display: none;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
       gap: 4px;
+      padding: 6px;
+      background: rgba(8, 14, 26, 0.65);
+      border-radius: 50%;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
     }
     .dpad-btn {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      border-radius: 8px;
-      color: var(--text-muted);
+      background: rgba(22, 33, 58, 0.8);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 10px;
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
       cursor: pointer;
       backdrop-filter: blur(6px);
-      transition: background 0.1s ease, transform 0.1s ease;
-      touch-action: manipulation;
+      transition: background 0.1s ease, transform 0.08s ease, border-color 0.1s ease;
+      touch-action: none;
     }
-    .dpad-btn:active {
-      background: rgba(0, 240, 255, 0.25);
+    .dpad-btn:active, .dpad-btn.pressed {
+      background: rgba(0, 240, 255, 0.35);
       border-color: var(--cyan-neon);
       color: var(--cyan-neon);
-      transform: scale(0.92);
+      box-shadow: 0 0 12px var(--cyan-glow);
+      transform: scale(0.94);
     }
-    .dpad-up { grid-column: 2; grid-row: 1; }
-    .dpad-left { grid-column: 1; grid-row: 2; }
+    .dpad-up { grid-column: 2; grid-row: 1; border-radius: 12px 12px 4px 4px; }
+    .dpad-left { grid-column: 1; grid-row: 2; border-radius: 12px 4px 4px 12px; }
     .dpad-center {
       grid-column: 2;
       grid-row: 2;
-      background: rgba(255,255,255,0.03);
-      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed rgba(56, 189, 248, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       pointer-events: none;
     }
-    .dpad-right { grid-column: 3; grid-row: 2; }
-    .dpad-down { grid-column: 2; grid-row: 3; }
+    .dpad-center-inner {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan-neon);
+      box-shadow: 0 0 8px var(--cyan-glow);
+    }
+    .dpad-right { grid-column: 3; grid-row: 2; border-radius: 4px 12px 12px 4px; }
+    .dpad-down { grid-column: 2; grid-row: 3; border-radius: 4px 4px 12px 12px; }
 
     /* Modals & Fullscreen Overlays */
     .modal-overlay {
@@ -364,7 +441,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s ease;
@@ -394,14 +471,15 @@
     }
 
     .modal-header {
-      padding: 20px 24px 16px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-shrink: 0;
     }
     .modal-title {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: var(--text-main);
       letter-spacing: -0.01em;
@@ -412,7 +490,7 @@
       color: var(--text-dim);
       font-size: 1.2rem;
       cursor: pointer;
-      padding: 4px;
+      padding: 4px 8px;
       transition: color 0.15s ease;
     }
     .modal-close:hover {
@@ -420,25 +498,27 @@
     }
 
     .modal-body {
-      padding: 20px 24px;
+      padding: 16px 20px;
       overflow-y: auto;
-      font-size: 0.9rem;
-      line-height: 1.6;
+      font-size: 0.88rem;
+      line-height: 1.55;
       color: var(--text-muted);
+      -webkit-overflow-scrolling: touch;
     }
 
     .modal-footer {
-      padding: 16px 24px 20px;
+      padding: 14px 20px;
       border-top: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 12px;
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     /* Common Button Styles */
     .btn-primary {
-      padding: 10px 20px;
+      padding: 10px 18px;
       background: var(--cyan-neon);
       color: #040812;
       border: none;
@@ -448,6 +528,11 @@
       cursor: pointer;
       transition: all 0.15s ease;
       box-shadow: 0 4px 14px var(--cyan-glow);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 42px;
     }
     .btn-primary:hover {
       background: #38bdf8;
@@ -458,15 +543,19 @@
     }
 
     .btn-secondary {
-      padding: 10px 18px;
+      padding: 10px 16px;
       background: rgba(255, 255, 255, 0.06);
       color: var(--text-main);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.1);
@@ -477,11 +566,11 @@
     .menu-options {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .menu-btn {
       width: 100%;
-      padding: 14px 18px;
+      padding: 12px 16px;
       text-align: left;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border-subtle);
@@ -492,6 +581,7 @@
       justify-content: space-between;
       cursor: pointer;
       transition: all 0.2s ease;
+      min-height: 52px;
     }
     .menu-btn:hover {
       background: rgba(56, 189, 248, 0.1);
@@ -504,12 +594,12 @@
       gap: 2px;
     }
     .menu-btn-title {
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: var(--text-main);
     }
     .menu-btn-desc {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--text-dim);
     }
 
@@ -517,11 +607,11 @@
     .difficulty-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 8px;
+      margin-bottom: 14px;
     }
     .diff-card {
-      padding: 14px;
+      padding: 12px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
@@ -536,28 +626,28 @@
     }
     .diff-title {
       font-weight: 800;
-      font-size: 0.95rem;
-      margin-bottom: 4px;
+      font-size: 0.92rem;
+      margin-bottom: 2px;
       color: var(--text-main);
     }
     .diff-specs {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     /* Settings rows */
     .settings-group {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .setting-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding-bottom: 12px;
+      gap: 14px;
+      padding-bottom: 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     .setting-label {
@@ -566,12 +656,12 @@
       gap: 2px;
     }
     .setting-name {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       color: var(--text-main);
     }
     .setting-hint {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-dim);
     }
 
@@ -618,32 +708,32 @@
     /* Range slider */
     .range-input {
       accent-color: var(--cyan-neon);
-      width: 110px;
+      width: 100px;
     }
 
     /* Victory Stats Grid */
     .victory-stats {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin: 16px 0;
+      gap: 10px;
+      margin: 14px 0;
     }
     .stat-tile {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 12px;
+      padding: 10px;
       text-align: center;
     }
     .stat-tile-label {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 600;
       color: var(--text-dim);
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .stat-tile-value {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-family: var(--font-mono);
       font-weight: 700;
       color: var(--cyan-neon);
@@ -670,6 +760,7 @@
       font-size: 1.1rem;
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-dim);
+      flex-shrink: 0;
     }
     .achievement-item.unlocked .achievement-icon {
       background: rgba(0, 240, 255, 0.15);
@@ -681,19 +772,19 @@
     }
     .achievement-name {
       font-weight: 700;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       color: var(--text-main);
     }
     .achievement-desc {
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: var(--text-dim);
     }
 
     /* How to Play Items */
     .guide-item {
       display: flex;
-      gap: 14px;
-      margin-bottom: 14px;
+      gap: 12px;
+      margin-bottom: 12px;
       align-items: flex-start;
     }
     .guide-badge {
@@ -707,27 +798,94 @@
       flex-shrink: 0;
     }
 
-    /* Responsiveness */
+    /* Specific Mobile Phone Optimizations (Screen Width <= 768px) */
     @media (max-width: 768px) {
       header.game-header {
+        height: 48px;
         padding: 0 10px;
+      }
+      .brand-title-text {
+        font-size: 0.95rem;
       }
       .metric-label-text {
         display: none;
       }
-      .brand-title-text {
-        font-size: 1rem;
+      .metric-item {
+        gap: 3px;
       }
-      #minimap-card {
-        bottom: 12px;
-        right: 12px;
+      .metric-value {
+        font-size: 0.88rem;
       }
-      #minimapCanvas {
-        width: 100px;
-        height: 100px;
+      /* Hide top header action buttons on mobile so header is clean, use thumb quick hub instead */
+      .hud-controls {
+        display: none;
+      }
+      #mobile-quick-hub {
+        display: flex;
       }
       #touch-dpad {
         display: grid;
+      }
+      #minimap-card {
+        top: 10px;
+        right: 10px;
+      }
+      #minimapCanvas {
+        width: 88px;
+        height: 88px;
+      }
+      .modal-card {
+        max-height: 94vh;
+        border-radius: 12px;
+      }
+      .modal-body {
+        padding: 14px 16px;
+      }
+      .modal-header, .modal-footer {
+        padding: 12px 16px;
+      }
+      .difficulty-grid {
+        gap: 6px;
+      }
+      .diff-card {
+        padding: 10px;
+      }
+      .diff-title {
+        font-size: 0.86rem;
+      }
+      .diff-specs {
+        font-size: 0.68rem;
+      }
+    }
+
+    /* Landscape Mode Mobile Optimization (Phones turned sideways) */
+    @media (max-height: 500px) and (orientation: landscape) {
+      header.game-header {
+        height: 40px;
+      }
+      #touch-dpad {
+        bottom: 12px;
+        left: 12px;
+        width: 120px;
+        height: 120px;
+      }
+      #mobile-quick-hub {
+        bottom: 12px;
+        right: 12px;
+        flex-direction: row;
+      }
+      .btn-mobile-quick {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      #minimap-card {
+        top: 6px;
+        right: 6px;
+      }
+      #minimapCanvas {
+        width: 70px;
+        height: 70px;
       }
     }
   </style>
@@ -764,6 +922,7 @@
       </div>
     </div>
 
+    <!-- Desktop controls -->
     <div class="hud-controls">
       <button class="btn-hud" id="btn-hint" title="Hint (H)">
         <span>💡</span>
@@ -785,20 +944,42 @@
   <main id="canvas-container">
     <canvas id="gameCanvas"></canvas>
 
-    <!-- Mini-Map Overlay -->
-    <div id="minimap-card">
+    <!-- Mini-Map Radar Overlay (Tap to expand/toggle) -->
+    <div id="minimap-card" title="Tap to toggle Radar">
       <div class="minimap-header">
         <span>Radar</span>
         <span id="minimap-coords">0, 0</span>
       </div>
-      <canvas id="minimapCanvas" width="140" height="140"></canvas>
+      <canvas id="minimapCanvas" width="120" height="120"></canvas>
     </div>
 
-    <!-- Mobile Virtual D-Pad -->
+    <!-- Mobile Floating Thumb Quick Actions Hub (Right Side, thumb accessible) -->
+    <div id="mobile-quick-hub">
+      <button class="btn-mobile-quick" id="m-btn-hint" aria-label="Hint">
+        <span>💡</span>
+        <span class="btn-sub">Hint</span>
+      </button>
+      <button class="btn-mobile-quick" id="m-btn-minimap" aria-label="Toggle Radar">
+        <span>🗺️</span>
+        <span class="btn-sub">Radar</span>
+      </button>
+      <button class="btn-mobile-quick" id="m-btn-restart" aria-label="Restart">
+        <span>🔄</span>
+        <span class="btn-sub">Reset</span>
+      </button>
+      <button class="btn-mobile-quick" id="m-btn-pause" aria-label="Pause">
+        <span>⏸</span>
+        <span class="btn-sub">Pause</span>
+      </button>
+    </div>
+
+    <!-- Mobile Virtual Circular D-Pad (Left Side, with continuous hold) -->
     <div id="touch-dpad">
       <button class="dpad-btn dpad-up" id="dpad-up" aria-label="Up">▲</button>
       <button class="dpad-btn dpad-left" id="dpad-left" aria-label="Left">◀</button>
-      <div class="dpad-center"></div>
+      <div class="dpad-center">
+        <div class="dpad-center-inner"></div>
+      </div>
       <button class="dpad-btn dpad-right" id="dpad-right" aria-label="Right">▶</button>
       <button class="dpad-btn dpad-down" id="dpad-down" aria-label="Down">▼</button>
     </div>
@@ -817,8 +998,8 @@
         <span style="font-size: 0.75rem; color: var(--cyan-neon); font-family: var(--font-mono); font-weight: 700;">PRO</span>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 16px; color: var(--text-muted);">
-          Navigate procedurally generated labyrinths, gather color-coded keys, bypass laser traps, warp through portals, and race the countdown.
+        <p style="margin-bottom: 14px; color: var(--text-muted);">
+          Navigate procedural labyrinths, gather color-coded keys, bypass laser traps, warp through portals, and race the countdown.
         </p>
 
         <div class="difficulty-grid">
@@ -865,6 +1046,14 @@
             <span style="color: var(--emerald-neon);">🎯</span>
           </button>
 
+          <button class="menu-btn" id="menu-btn-install" style="display: none; border-color: rgba(0, 240, 255, 0.4);">
+            <div class="menu-btn-content">
+              <span class="menu-btn-title" style="color: var(--cyan-neon);">Install App on Phone 📲</span>
+              <span class="menu-btn-desc">Add to Home Screen for fullscreen offline play</span>
+            </div>
+            <span style="color: var(--cyan-neon);">⬇</span>
+          </button>
+
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px;">
             <button class="btn-secondary" id="menu-btn-guide">How to Play</button>
             <button class="btn-secondary" id="menu-btn-records">Records & Stats</button>
@@ -872,7 +1061,7 @@
         </div>
       </div>
       <div class="modal-footer" style="justify-content: space-between;">
-        <span style="font-size: 0.72rem; color: var(--text-dim);">Arrows / WASD / Swipe</span>
+        <span style="font-size: 0.72rem; color: var(--text-dim);">Swipe / D-Pad / WASD</span>
         <button class="btn-secondary" id="menu-btn-settings">Settings ⚙️</button>
       </div>
     </div>
@@ -885,12 +1074,12 @@
         <div class="modal-title">Game Paused</div>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 20px;">The timer has stopped. Resume whenever you are ready.</p>
+        <p style="margin-bottom: 16px;">The countdown timer has paused. Take a breath and resume when ready.</p>
         <div class="menu-options">
-          <button class="btn-primary" id="pause-btn-resume" style="width: 100%; padding: 12px;">Resume Game</button>
-          <button class="btn-secondary" id="pause-btn-restart" style="width: 100%; padding: 12px;">Restart Current Maze</button>
-          <button class="btn-secondary" id="pause-btn-settings" style="width: 100%; padding: 12px;">Settings</button>
-          <button class="btn-secondary" id="pause-btn-menu" style="width: 100%; padding: 12px;">Quit to Main Menu</button>
+          <button class="btn-primary" id="pause-btn-resume" style="width: 100%;">Resume Game</button>
+          <button class="btn-secondary" id="pause-btn-restart" style="width: 100%;">Restart Current Maze</button>
+          <button class="btn-secondary" id="pause-btn-settings" style="width: 100%;">Settings</button>
+          <button class="btn-secondary" id="pause-btn-menu" style="width: 100%;">Quit to Main Menu</button>
         </div>
       </div>
     </div>
@@ -922,8 +1111,8 @@
             <div class="stat-tile-value" id="victory-hints">0</div>
           </div>
         </div>
-        <p id="victory-flavor" style="font-size: 0.84rem; color: var(--text-muted); text-align: center;">
-          Excellent tactical navigation through the shifting maze corridors.
+        <p id="victory-flavor" style="font-size: 0.82rem; color: var(--text-muted); text-align: center;">
+          Optimal speed and spatial pathfinding through the labyrinth matrix.
         </p>
       </div>
       <div class="modal-footer">
@@ -940,7 +1129,7 @@
         <div class="modal-title" style="color: var(--rose-neon);">Time Depleted</div>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 16px;">The countdown reached zero before you reached the exit extraction point.</p>
+        <p style="margin-bottom: 14px;">The countdown reached zero before you reached the extraction vortex.</p>
         <div class="victory-stats">
           <div class="stat-tile">
             <div class="stat-tile-label">Moves Made</div>
@@ -970,8 +1159,16 @@
         <div class="guide-item">
           <div class="guide-badge" style="background: rgba(0, 240, 255, 0.2); color: var(--cyan-neon);">★</div>
           <div>
+            <strong style="color: var(--text-main);">Controls on Phone:</strong>
+            <p>Use the on-screen circular D-pad (tap or hold to continuously walk) or swipe in any direction across the screen.</p>
+          </div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--emerald-neon);">🌀</div>
+          <div>
             <strong style="color: var(--text-main);">Goal & Extraction:</strong>
-            <p>Guide your cyan avatar from the start point to the emerald extraction vortex at the opposite corner of the labyrinth.</p>
+            <p>Guide your cyan player node from the starting coordinate to the emerald extraction vortex at the opposite corner.</p>
           </div>
         </div>
 
@@ -987,23 +1184,15 @@
           <div class="guide-badge" style="background: rgba(168, 85, 247, 0.2); color: var(--violet-neon);">⚡</div>
           <div>
             <strong style="color: var(--text-main);">Teleporters & Switches:</strong>
-            <p>Step onto matching portal pairs to instantly warp across the maze. Step on pressure switches to invert gate barriers.</p>
+            <p>Step onto matching portal pairs to instantly warp across coordinates. Step on pressure switches to invert gate barriers.</p>
           </div>
         </div>
 
         <div class="guide-item">
           <div class="guide-badge" style="background: rgba(244, 63, 94, 0.2); color: var(--rose-neon);">⚠️</div>
           <div>
-            <strong style="color: var(--text-main);">Traps & Patrol Drones:</strong>
-            <p>Spike traps cycle through Warning and Lethal phases. Patrol drones traverse specific corridors. Avoid crossing while active!</p>
-          </div>
-        </div>
-
-        <div class="guide-item">
-          <div class="guide-badge" style="background: rgba(56, 189, 248, 0.2); color: var(--cyan-neon);">💡</div>
-          <div>
-            <strong style="color: var(--text-main);">Hints & Pathfinding:</strong>
-            <p>Press <kbd style="background: #1e293b; padding: 2px 5px; border-radius: 4px;">H</kbd> to reveal the optimal BFS path to the exit. Uses incur a modest score deduction.</p>
+            <strong style="color: var(--text-main);">Traps & Warning Cycles:</strong>
+            <p>Spike traps cycle through Warning and Lethal phases. Stepping on active traps incurs time and score penalties!</p>
           </div>
         </div>
       </div>
@@ -1035,10 +1224,32 @@
 
           <div class="setting-row">
             <div class="setting-label">
+              <span class="setting-name">Haptic Vibration</span>
+              <span class="setting-hint">Tactile phone buzz on steps, keys & traps</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setting-haptics" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-label">
               <span class="setting-name">Sound Volume</span>
               <span class="setting-hint">Adjust synthesizer output level</span>
             </div>
             <input type="range" class="range-input" id="setting-volume" min="0" max="1" step="0.05" value="0.7">
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-label">
+              <span class="setting-name">Virtual Touch D-Pad</span>
+              <span class="setting-hint">On-screen circular thumb controls</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="setting-dpad" checked>
+              <span class="slider"></span>
+            </label>
           </div>
 
           <div class="setting-row">
@@ -1054,19 +1265,8 @@
 
           <div class="setting-row">
             <div class="setting-label">
-              <span class="setting-name">Virtual Touch D-Pad</span>
-              <span class="setting-hint">On-screen directional buttons</span>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="setting-dpad">
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="setting-row">
-            <div class="setting-label">
               <span class="setting-name">Reduced Motion</span>
-              <span class="setting-hint">Disable smooth camera lerping and particle bursts</span>
+              <span class="setting-hint">Disable smooth camera lerping and bursts</span>
             </div>
             <label class="switch">
               <input type="checkbox" id="setting-motion">
@@ -1085,11 +1285,11 @@
   <div class="modal-overlay" id="modal-records">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">Personal Records & Stats</div>
+        <div class="modal-title">Records & Stats</div>
         <button class="modal-close" data-close="modal-records">✕</button>
       </div>
       <div class="modal-body">
-        <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-bottom: 8px;">
+        <div style="font-size: 0.74rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin-bottom: 8px;">
           Best Completion Times (Local)
         </div>
         <div class="victory-stats" style="margin-top: 0;">
@@ -1111,7 +1311,7 @@
           </div>
         </div>
 
-        <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin: 16px 0 8px;">
+        <div style="font-size: 0.74rem; text-transform: uppercase; color: var(--text-dim); font-weight: 700; margin: 14px 0 8px;">
           Achievements Unlocked
         </div>
         <div id="achievements-container">
@@ -1119,8 +1319,29 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-secondary" id="btn-clear-stats" style="color: var(--rose-neon);">Reset Records</button>
+        <button class="btn-secondary" id="btn-clear-stats" style="color: var(--rose-neon);">Reset</button>
         <button class="btn-primary" data-close="modal-records">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS INSTALL INSTRUCTIONS MODAL -->
+  <div class="modal-overlay" id="modal-ios-install">
+    <div class="modal-card" style="max-width: 400px;">
+      <div class="modal-header">
+        <div class="modal-title">Install on iPhone / iPad</div>
+        <button class="modal-close" data-close="modal-ios-install">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 14px;">To install MazeShift as a standalone app on iOS:</p>
+        <ol style="margin-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <li>Tap the <strong>Share</strong> button <span style="font-size: 1.1rem;">⎋</span> in your Safari bottom toolbar.</li>
+          <li>Scroll down and tap <strong>Add to Home Screen</strong> <span style="font-size: 1.1rem;">⊞</span>.</li>
+          <li>Tap <strong>Add</strong> in the top right corner.</li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary" data-close="modal-ios-install">Got It</button>
       </div>
     </div>
   </div>
@@ -1128,13 +1349,7 @@
   <!-- CORE GAME SCRIPT -->
   <script>
   /**
-   * MazeShift Core Engine
-   * Clean modular architecture:
-   * 1. AudioSynthesizer (Web Audio API)
-   * 2. StorageManager (localStorage persistence)
-   * 3. MazeGenerator (Randomized DFS with loop braiding & reachability check)
-   * 4. PathFinder (BFS shortest path & hint generator)
-   * 5. GameEngine (Canvas 2D renderer, camera lerping, physics, puzzle state machine)
+   * MazeShift Mobile & Desktop Engine
    */
 
   // --- 1. WEB AUDIO API SYNTHESIZER ---
@@ -1174,9 +1389,7 @@
         gain.connect(this.ctx.destination);
         osc.start(now);
         osc.stop(now + duration);
-      } catch (e) {
-        // Audio error handling
-      }
+      } catch (e) {}
     }
 
     playMove() {
@@ -1212,10 +1425,6 @@
       gain.connect(this.ctx.destination);
       osc.start(now);
       osc.stop(now + 0.2);
-    }
-
-    playTrapWarning() {
-      this.playTone(420, 'square', 0.08, 380);
     }
 
     playTrapHit() {
@@ -1254,8 +1463,7 @@
     static KEYS = {
       RECORDS: 'mazeshift_records_v1',
       ACHIEVEMENTS: 'mazeshift_achievements_v1',
-      SETTINGS: 'mazeshift_settings_v1',
-      STATS: 'mazeshift_stats_v1'
+      SETTINGS: 'mazeshift_settings_v1'
     };
 
     static getRecords() {
@@ -1288,10 +1496,11 @@
 
     static getSettings() {
       try {
-        const defaults = { sound: true, volume: 0.7, fog: false, dpad: false, motion: false };
+        const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        const defaults = { sound: true, volume: 0.7, fog: false, dpad: true, motion: false, haptics: isMobile };
         return Object.assign(defaults, JSON.parse(localStorage.getItem(this.KEYS.SETTINGS)) || {});
       } catch (e) {
-        return { sound: true, volume: 0.7, fog: false, dpad: false, motion: false };
+        return { sound: true, volume: 0.7, fog: false, dpad: true, motion: false, haptics: true };
       }
     }
 
@@ -1329,7 +1538,6 @@
     }
   }
 
-  // Achievement Definitions
   const ACHIEVEMENTS_LIST = [
     { id: 'first_win', name: 'First Extraction', desc: 'Successfully solve your first maze', icon: '🏁' },
     { id: 'speed_demon', name: 'Speed Demon', desc: 'Finish any maze in under 30 seconds', icon: '⚡' },
@@ -1356,22 +1564,13 @@
   }
 
   // --- 4. PROCEDURAL MAZE GENERATOR ---
-  // Cell types:
-  // 0: Path, 1: Wall, 2: Key(cyan), 3: Key(amber), 4: Key(violet)
-  // 5: Door(cyan), 6: Door(amber), 7: Door(violet)
-  // 8: Teleporter, 9: Switch, 10: Gate(closed), 11: Gate(open)
-  // 12: Trap, 13: Bonus
   class MazeGenerator {
     static generate(size, difficulty, seed = null) {
       const prng = new PRNG(seed || Date.now());
-      // Ensure odd dimensions
       const width = size % 2 === 0 ? size + 1 : size;
       const height = width;
 
-      // Initialize grid with walls (1)
       const grid = Array.from({ length: height }, () => Array(width).fill(1));
-
-      // DFS Backtracker
       const stack = [];
       const startX = 1;
       const startY = 1;
@@ -1407,26 +1606,22 @@
         }
       }
 
-      // Exit coordinates
       const exitX = width - 2;
       const exitY = height - 2;
       grid[exitY][exitX] = 0;
 
-      // Loop Braiding (remove selected dead ends on Normal/Hard/Nightmare for shortcuts)
+      // Loop Braiding
       if (difficulty !== 'easy') {
         const braidFactor = difficulty === 'normal' ? 0.08 : difficulty === 'hard' ? 0.12 : 0.15;
         for (let y = 1; y < height - 1; y += 2) {
           for (let x = 1; x < width - 1; x += 2) {
             if (grid[y][x] === 0) {
-              let wallNeighbors = 0;
               const openDirs = [];
               for (const dir of directions) {
                 const wx = x + dir.dx / 2;
                 const wy = y + dir.dy / 2;
                 if (grid[wy][wx] === 0) openDirs.push(dir);
-                else wallNeighbors++;
               }
-              // If it's a dead-end (only 1 open path)
               if (openDirs.length === 1 && prng.next() < braidFactor) {
                 const candidates = directions.filter(d => {
                   const wx = x + d.dx / 2;
@@ -1445,7 +1640,6 @@
         }
       }
 
-      // Collect all walkable corridor cells
       const walkableCells = [];
       for (let y = 1; y < height - 1; y++) {
         for (let x = 1; x < width - 1; x++) {
@@ -1455,7 +1649,6 @@
         }
       }
 
-      // Shuffle helper
       const shuffle = (arr) => {
         for (let i = arr.length - 1; i > 0; i--) {
           const j = Math.floor(prng.next() * (i + 1));
@@ -1464,33 +1657,26 @@
       };
       shuffle(walkableCells);
 
-      // Mechanics distribution based on difficulty
       const puzzleEntities = {
-        keys: [],        // { x, y, color: 'cyan'|'amber'|'violet', type: 2|3|4 }
-        doors: [],       // { x, y, color: 'cyan'|'amber'|'violet', type: 5|6|7, open: false }
-        teleporters: [], // [ {x, y, id: 1}, {x, y, id: 1} ] paired
-        switches: [],    // { x, y, targetGateId }
-        gates: [],       // { x, y, id, open: false }
-        traps: [],       // { x, y, state: 'dormant'|'warning'|'lethal', timer: 0 }
-        drones: [],      // { x, y, dx, dy, speed, dir }
-        bonuses: []      // { x, y }
+        keys: [],
+        doors: [],
+        teleporters: [],
+        switches: [],
+        gates: [],
+        traps: [],
+        bonuses: []
       };
 
-      // 1. Keys and Doors placement
       const keyColors = [];
       if (difficulty === 'normal') keyColors.push('cyan');
       if (difficulty === 'hard') keyColors.push('cyan', 'amber');
       if (difficulty === 'nightmare') keyColors.push('cyan', 'amber', 'violet');
 
-      // Helper to compute BFS distance map from start
       const distFromStart = PathFinder.getDistanceMap(grid, startX, startY, width, height);
-
-      // Sort walkable cells by distance from start
       const byDistance = [...walkableCells].sort((a, b) => distFromStart[a.y][a.x] - distFromStart[b.y][b.x]);
 
       keyColors.forEach((color, idx) => {
         const typeMap = { cyan: { key: 2, door: 5 }, amber: { key: 3, door: 6 }, violet: { key: 4, door: 7 } };
-        // Place door closer to the exit, key reachable earlier
         const doorIdx = Math.floor(byDistance.length * (0.6 + idx * 0.12));
         const keyIdx = Math.floor(byDistance.length * (0.2 + idx * 0.15));
 
@@ -1504,13 +1690,11 @@
           puzzleEntities.doors.push({ x: doorCell.x, y: doorCell.y, color, type: typeMap[color].door, open: false });
           puzzleEntities.keys.push({ x: keyCell.x, y: keyCell.y, color, type: typeMap[color].key, collected: false });
 
-          // remove from available
           byDistance.splice(doorIdx, 1);
           byDistance.splice(keyIdx, 1);
         }
       });
 
-      // 2. Teleporters (Hard & Nightmare)
       if (difficulty === 'hard' || difficulty === 'nightmare') {
         const tpPairsCount = difficulty === 'hard' ? 1 : 2;
         for (let p = 0; p < tpPairsCount; p++) {
@@ -1527,17 +1711,15 @@
         }
       }
 
-      // 3. Pressure Switches and Gates (Normal, Hard, Nightmare)
       if (difficulty !== 'easy' && byDistance.length >= 6) {
         const switchCell = byDistance.splice(Math.floor(byDistance.length * 0.3), 1)[0];
         const gateCell = byDistance.splice(Math.floor(byDistance.length * 0.7), 1)[0];
         grid[switchCell.y][switchCell.x] = 9;
-        grid[gateCell.y][gateCell.x] = 10; // closed gate
+        grid[gateCell.y][gateCell.x] = 10;
         puzzleEntities.switches.push({ x: switchCell.x, y: switchCell.y, gateId: 0, pressed: false });
         puzzleEntities.gates.push({ x: gateCell.x, y: gateCell.y, id: 0, open: false });
       }
 
-      // 4. Traps with clear warning cycles (Hard & Nightmare)
       if (difficulty === 'hard' || difficulty === 'nightmare') {
         const trapCount = difficulty === 'hard' ? 3 : 6;
         for (let t = 0; t < trapCount; t++) {
@@ -1547,32 +1729,13 @@
             puzzleEntities.traps.push({
               x: trapCell.x,
               y: trapCell.y,
-              state: 'dormant', // dormant -> warning -> lethal
+              state: 'dormant',
               phaseTimer: prng.next() * 3
             });
           }
         }
       }
 
-      // 5. Moving Obstacle Drones (Nightmare)
-      if (difficulty === 'nightmare') {
-        const droneCount = 2;
-        for (let d = 0; d < droneCount; d++) {
-          if (byDistance.length > 4) {
-            const droneCell = byDistance.splice(Math.floor(prng.next() * byDistance.length), 1)[0];
-            puzzleEntities.drones.push({
-              x: droneCell.x,
-              y: droneCell.y,
-              currentX: droneCell.x,
-              currentY: droneCell.y,
-              dir: prng.next() > 0.5 ? 1 : -1,
-              axis: prng.next() > 0.5 ? 'x' : 'y'
-            });
-          }
-        }
-      }
-
-      // 6. Bonus Shards (All difficulties, placed in dead-ends or corridors)
       const bonusCount = difficulty === 'easy' ? 2 : difficulty === 'normal' ? 3 : 4;
       for (let b = 0; b < bonusCount; b++) {
         if (byDistance.length > 0) {
@@ -1582,7 +1745,6 @@
         }
       }
 
-      // Solvability validation: BFS to ensure start can reach exit (ignoring locked doors assuming keys can be collected)
       const isSolvable = PathFinder.validateReachability(grid, startX, startY, exitX, exitY);
 
       return {
@@ -1643,7 +1805,6 @@
 
         for (const n of neighbors) {
           if (n.x >= 0 && n.x < width && n.y >= 0 && n.y < height) {
-            // Can pass through anything except solid walls (1)
             if (grid[n.y][n.x] !== 1 && !visited[n.y][n.x]) {
               visited[n.y][n.x] = true;
               queue.push(n);
@@ -1654,7 +1815,6 @@
       return false;
     }
 
-    // Solves shortest path from current position taking current inventory keys and open doors into account
     static findShortestPath(grid, startX, startY, targetX, targetY, keysCollected = [], openDoors = [], openGates = []) {
       const height = grid.length;
       const width = grid[0].length;
@@ -1667,7 +1827,6 @@
       while (queue.length > 0) {
         const curr = queue.shift();
         if (curr.x === targetX && curr.y === targetY) {
-          // Reconstruct path
           const path = [];
           let trace = curr;
           while (trace) {
@@ -1690,7 +1849,7 @@
             let passable = false;
 
             if (cell === 0 || cell === 8 || cell === 9 || cell === 12 || cell === 13) {
-              passable = true; // corridor, teleporter, switch, trap, bonus
+              passable = true;
             } else if (cell === 2 && keysCollected.includes('cyan')) passable = true;
             else if (cell === 3 && keysCollected.includes('amber')) passable = true;
             else if (cell === 4 && keysCollected.includes('violet')) passable = true;
@@ -1698,7 +1857,7 @@
             else if (cell === 6 && (keysCollected.includes('amber') || openDoors.some(d => d.x === n.x && d.y === n.y))) passable = true;
             else if (cell === 7 && (keysCollected.includes('violet') || openDoors.some(d => d.x === n.x && d.y === n.y))) passable = true;
             else if (cell === 10 && openGates.some(g => g.x === n.x && g.y === n.y)) passable = true;
-            else if (cell === 11) passable = true; // gate open
+            else if (cell === 11) passable = true;
 
             if (passable) {
               visited[n.y][n.x] = true;
@@ -1763,16 +1922,14 @@
   // --- 7. MAIN GAME CONTROLLER & RENDERER ---
   class MazeShiftGame {
     constructor() {
-      // DOM Elements
       this.canvas = document.getElementById('gameCanvas');
       this.ctx = this.canvas.getContext('2d');
       this.minimapCanvas = document.getElementById('minimapCanvas');
       this.minimapCtx = this.minimapCanvas.getContext('2d');
-      this.minimapCard = document.getElementById('minimapCard');
+      this.minimapCard = document.getElementById('minimap-card');
       this.toastBanner = document.getElementById('toast-banner');
       this.toastText = document.getElementById('toast-text');
 
-      // HUD Elements
       this.hudTimer = document.getElementById('hud-timer');
       this.hudMoves = document.getElementById('hud-moves');
       this.hudScore = document.getElementById('hud-score');
@@ -1781,22 +1938,18 @@
       this.slotViolet = document.getElementById('slot-violet');
       this.minimapCoords = document.getElementById('minimap-coords');
 
-      // Audio & Storage
       this.audio = new AudioSynthesizer();
       this.settings = StorageManager.getSettings();
       this.audio.enabled = this.settings.sound;
       this.audio.volume = this.settings.volume;
 
-      // Particle system
       this.particles = new ParticlePool();
 
-      // Game State
-      this.state = 'MENU'; // 'MENU' | 'PLAYING' | 'PAUSED' | 'VICTORY' | 'GAMEOVER'
-      this.difficulty = 'easy'; // 'easy' | 'normal' | 'hard' | 'nightmare'
+      this.state = 'MENU';
+      this.difficulty = 'easy';
       this.isDaily = false;
       this.isPractice = false;
 
-      // Maze Data
       this.maze = null;
       this.cellSize = 36;
       this.player = {
@@ -1808,37 +1961,46 @@
         pulseTimer: 0
       };
 
-      // Camera
       this.camera = { x: 0, y: 0 };
-
-      // Gameplay Counters
       this.timerRemaining = 120;
       this.timerMax = 120;
       this.moveCount = 0;
       this.score = 0;
       this.hintsUsed = 0;
-      this.keysCollected = []; // ['cyan', 'amber', 'violet']
-      this.activePathHint = null; // array of {x, y}
+      this.keysCollected = [];
+      this.activePathHint = null;
       this.hintTimer = 0;
-
-      // Fog of War exploration matrix
       this.explored = [];
 
-      // Timing & Animation loop
       this.lastTimestamp = 0;
       this.toastTimeout = null;
 
-      // Bind input events
+      // PWA deferred install prompt
+      this.deferredInstallPrompt = null;
+
+      // Continuous movement on touch hold
+      this.holdTimer = null;
+      this.holdInterval = null;
+
       this.initEvents();
       this.applySettings();
       this.updateDailyDateLabel();
+      this.initPWA();
 
-      // Handle window resize
       this.resize();
       window.addEventListener('resize', () => this.resize());
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => this.resize(), 150);
+      });
 
-      // Start animation loop
       requestAnimationFrame((ts) => this.loop(ts));
+    }
+
+    vibrate(pattern) {
+      if (!this.settings.haptics || !navigator.vibrate) return;
+      try {
+        navigator.vibrate(pattern);
+      } catch (e) {}
     }
 
     resize() {
@@ -1853,17 +2015,14 @@
       this.viewportWidth = width;
       this.viewportHeight = height;
 
-      // Dynamic cell size depending on screen dimensions and maze grid size
       if (this.maze) {
-        const minDim = Math.min(width, height);
-        // Ensure corridors are legible and touch targets generous
+        const isPhone = width <= 768;
         if (this.difficulty === 'easy') {
-          this.cellSize = Math.max(34, Math.floor(minDim / (this.maze.width + 2)));
+          this.cellSize = isPhone ? Math.max(28, Math.floor(width / (this.maze.width + 1))) : Math.max(34, Math.floor(Math.min(width, height) / (this.maze.width + 2)));
         } else if (this.difficulty === 'normal') {
-          this.cellSize = Math.max(30, Math.floor(minDim / (this.maze.width + 2)));
+          this.cellSize = isPhone ? 28 : Math.max(30, Math.floor(Math.min(width, height) / (this.maze.width + 2)));
         } else {
-          // Larger mazes use scrolling camera
-          this.cellSize = width < 768 ? 32 : 36;
+          this.cellSize = isPhone ? 30 : 36;
         }
       }
     }
@@ -1902,17 +2061,14 @@
       const gridSize = sizeMap[difficulty] || 15;
       const seed = isDaily ? this.getDailySeed() : Date.now();
 
-      // Generate Maze
       this.maze = MazeGenerator.generate(gridSize, difficulty, seed);
 
-      // Player initialization
       this.player.gridX = this.maze.startX;
       this.player.gridY = this.maze.startY;
       this.player.renderX = this.maze.startX;
       this.player.renderY = this.maze.startY;
       this.player.isMoving = false;
 
-      // Timer & Score setup
       this.timerMax = isPractice ? Infinity : timeMap[difficulty];
       this.timerRemaining = this.timerMax;
       this.moveCount = 0;
@@ -1922,20 +2078,16 @@
       this.activePathHint = null;
       this.hintTimer = 0;
 
-      // Fog of War setup
       this.explored = Array.from({ length: this.maze.height }, () => Array(this.maze.width).fill(false));
       this.revealFog(this.player.gridX, this.player.gridY, 3);
 
-      // Reset camera
-      this.camera.x = this.player.gridX * this.cellSize - this.viewportWidth / 2;
-      this.camera.y = this.player.gridY * this.cellSize - this.viewportHeight / 2;
+      this.camera.x = (this.player.gridX + 0.5) * this.cellSize - this.viewportWidth / 2;
+      this.camera.y = (this.player.gridY + 0.5) * this.cellSize - this.viewportHeight / 2;
 
-      // UI updates
       this.updateHUD();
       this.resize();
       this.renderMinimap();
 
-      // Hide all modals
       this.closeAllModals();
       this.state = 'PLAYING';
 
@@ -1960,57 +2112,54 @@
       const targetX = this.player.gridX + dx;
       const targetY = this.player.gridY + dy;
 
-      // Boundary check
       if (targetX < 0 || targetX >= this.maze.width || targetY < 0 || targetY >= this.maze.height) {
         return;
       }
 
       const cell = this.maze.grid[targetY][targetX];
 
-      // Wall collision
       if (cell === 1) {
         this.audio.playTone(140, 'sine', 0.04);
+        this.vibrate(10);
         return;
       }
 
-      // Door check
       if (cell === 5 && !this.keysCollected.includes('cyan')) {
         this.showToast('Locked! Requires Cyan Key 🔑');
         this.audio.playTone(180, 'sawtooth', 0.1);
+        this.vibrate([20, 30, 20]);
         return;
       }
       if (cell === 6 && !this.keysCollected.includes('amber')) {
         this.showToast('Locked! Requires Amber Key 🔑');
         this.audio.playTone(180, 'sawtooth', 0.1);
+        this.vibrate([20, 30, 20]);
         return;
       }
       if (cell === 7 && !this.keysCollected.includes('violet')) {
         this.showToast('Locked! Requires Violet Key 🔑');
         this.audio.playTone(180, 'sawtooth', 0.1);
+        this.vibrate([20, 30, 20]);
         return;
       }
 
-      // Closed Gate check
       if (cell === 10) {
         this.showToast('Security Gate Closed! Find the pressure switch 🔘');
         this.audio.playTone(180, 'sawtooth', 0.1);
+        this.vibrate(20);
         return;
       }
 
-      // Valid move executed
       this.player.gridX = targetX;
       this.player.gridY = targetY;
       this.moveCount++;
       this.score = Math.max(0, this.score + 10);
       this.audio.playMove();
+      this.vibrate(12);
 
-      // Fog of War update
       this.revealFog(targetX, targetY, this.difficulty === 'nightmare' ? 2.8 : 3.5);
-
-      // Interactive entity triggers
       this.checkEntityCollisions(targetX, targetY);
 
-      // Check win condition
       if (targetX === this.maze.exitX && targetY === this.maze.exitY) {
         this.triggerVictory();
         return;
@@ -2023,15 +2172,15 @@
     checkEntityCollisions(x, y) {
       const cell = this.maze.grid[y][x];
 
-      // 1. Keys
       if (cell >= 2 && cell <= 4) {
         const colorMap = { 2: 'cyan', 3: 'amber', 4: 'violet' };
         const color = colorMap[cell];
         if (!this.keysCollected.includes(color)) {
           this.keysCollected.push(color);
-          this.maze.grid[y][x] = 0; // replace with open path
+          this.maze.grid[y][x] = 0;
           this.score += 250;
           this.audio.playKey();
+          this.vibrate([25, 40, 25]);
           this.particles.burst(
             (x + 0.5) * this.cellSize,
             (y + 0.5) * this.cellSize,
@@ -2043,14 +2192,13 @@
         }
       }
 
-      // 2. Unlocking doors
       if (cell >= 5 && cell <= 7) {
-        this.maze.grid[y][x] = 0; // opened
+        this.maze.grid[y][x] = 0;
         this.audio.playDoor();
+        this.vibrate(25);
         this.particles.burst((x + 0.5) * this.cellSize, (y + 0.5) * this.cellSize, '#38bdf8', 16);
       }
 
-      // 3. Teleporters
       if (cell === 8) {
         const tp = this.maze.puzzleEntities.teleporters.find(t => t.x === x && t.y === y);
         if (tp) {
@@ -2059,6 +2207,7 @@
           this.player.renderX = tp.pairX;
           this.player.renderY = tp.pairY;
           this.audio.playTeleport();
+          this.vibrate([30, 50, 40]);
           this.particles.burst((tp.pairX + 0.5) * this.cellSize, (tp.pairY + 0.5) * this.cellSize, '#a855f7', 25);
           this.showToast('Dimensional Warp Jump!');
           StorageManager.unlockAchievement('portal_jumper');
@@ -2066,13 +2215,12 @@
         }
       }
 
-      // 4. Pressure Switches
       if (cell === 9) {
         const sw = this.maze.puzzleEntities.switches.find(s => s.x === x && s.y === y);
         if (sw && !sw.pressed) {
           sw.pressed = true;
           this.audio.playSwitch();
-          // Invert matching gates
+          this.vibrate(25);
           this.maze.puzzleEntities.gates.forEach(gate => {
             if (gate.id === sw.gateId) {
               gate.open = !gate.open;
@@ -2085,11 +2233,11 @@
         }
       }
 
-      // 5. Traps
       if (cell === 12) {
         const trap = this.maze.puzzleEntities.traps.find(t => t.x === x && t.y === y);
         if (trap && trap.state === 'lethal') {
           this.audio.playTrapHit();
+          this.vibrate([70, 40, 70]);
           this.score = Math.max(0, this.score - 150);
           if (!this.isPractice) {
             this.timerRemaining = Math.max(0, this.timerRemaining - 10);
@@ -2102,7 +2250,6 @@
         }
       }
 
-      // 6. Bonus Shards
       if (cell === 13) {
         this.maze.grid[y][x] = 0;
         this.score += 300;
@@ -2110,6 +2257,7 @@
           this.timerRemaining = Math.min(this.timerMax, this.timerRemaining + 15);
         }
         this.audio.playBonus();
+        this.vibrate(30);
         this.particles.burst((x + 0.5) * this.cellSize, (y + 0.5) * this.cellSize, '#10b981', 20);
         this.showToast('+15s Time & +300 Points Power-Core!');
       }
@@ -2132,10 +2280,11 @@
 
       if (path && path.length > 1) {
         this.activePathHint = path;
-        this.hintTimer = 4.0; // show for 4 seconds
+        this.hintTimer = 4.0;
         this.hintsUsed++;
-        this.score = Math.max(0, this.score - 40); // fair hint penalty
+        this.score = Math.max(0, this.score - 40);
         this.audio.playTone(720, 'sine', 0.12, 1080);
+        this.vibrate(20);
         this.showToast('BFS Shortest Path Highlighted (-40 pts)');
         this.updateHUD();
       } else {
@@ -2147,8 +2296,8 @@
     triggerVictory() {
       this.state = 'VICTORY';
       this.audio.playVictory();
+      this.vibrate([40, 60, 40, 60, 100]);
 
-      // Burst victory confetti particles
       this.particles.burst(
         (this.maze.exitX + 0.5) * this.cellSize,
         (this.maze.exitY + 0.5) * this.cellSize,
@@ -2159,15 +2308,12 @@
       const timeTakenSec = Math.max(1, this.timerMax - this.timerRemaining);
       const formattedTime = this.formatTime(this.isPractice ? this.moveCount * 1.5 : timeTakenSec);
 
-      // Score bonus calculations
       const timeBonus = this.isPractice ? 0 : Math.floor(this.timerRemaining * 15);
       const moveEfficiencyBonus = Math.max(0, 1000 - this.moveCount * 8);
       const totalScore = Math.max(100, this.score + timeBonus + moveEfficiencyBonus);
 
-      // Save records
       const isNewBest = StorageManager.saveRecord(this.difficulty, timeTakenSec, totalScore);
 
-      // Achievements check
       StorageManager.unlockAchievement('first_win');
       if (timeTakenSec < 30) StorageManager.unlockAchievement('speed_demon');
       if (this.difficulty === 'nightmare') StorageManager.unlockAchievement('nightmare_walker');
@@ -2176,7 +2322,6 @@
       }
       if (this.isDaily) StorageManager.unlockAchievement('daily_voyager');
 
-      // Populate victory modal
       document.getElementById('victory-time').textContent = formattedTime;
       document.getElementById('victory-score').textContent = totalScore.toLocaleString();
       document.getElementById('victory-moves').textContent = this.moveCount;
@@ -2191,6 +2336,7 @@
     triggerGameOver() {
       this.state = 'GAMEOVER';
       this.audio.playGameOver();
+      this.vibrate([100, 50, 100]);
 
       document.getElementById('gameover-moves').textContent = this.moveCount;
       document.getElementById('gameover-keys').textContent = `${this.keysCollected.length}/3`;
@@ -2213,7 +2359,6 @@
       this.hudMoves.textContent = this.moveCount;
       this.hudScore.textContent = this.score;
 
-      // Key slot classes
       this.slotCyan.className = 'key-slot' + (this.keysCollected.includes('cyan') ? ' has-key key-cyan' : '');
       this.slotAmber.className = 'key-slot' + (this.keysCollected.includes('amber') ? ' has-key key-amber' : '');
       this.slotViolet.className = 'key-slot' + (this.keysCollected.includes('violet') ? ' has-key key-violet' : '');
@@ -2229,7 +2374,6 @@
       return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ms}`;
     }
 
-    // --- GAME LOOP ---
     loop(timestamp) {
       if (!this.lastTimestamp) this.lastTimestamp = timestamp;
       const dt = Math.min((timestamp - this.lastTimestamp) / 1000, 0.1);
@@ -2243,7 +2387,6 @@
 
     update(dt) {
       if (this.state === 'PLAYING') {
-        // Countdown timer
         if (!this.isPractice) {
           this.timerRemaining -= dt;
           if (this.timerRemaining <= 0) {
@@ -2252,13 +2395,12 @@
             this.triggerGameOver();
             return;
           }
-          // Tick sound at final 10 seconds
           if (this.timerRemaining <= 10 && Math.floor(this.timerRemaining) !== Math.floor(this.timerRemaining + dt)) {
             this.audio.playTone(320, 'square', 0.05);
+            this.vibrate(15);
           }
         }
 
-        // Hint timer decay
         if (this.hintTimer > 0) {
           this.hintTimer -= dt;
           if (this.hintTimer <= 0) {
@@ -2266,7 +2408,6 @@
           }
         }
 
-        // Smooth player position lerp
         if (!this.settings.motion) {
           const lerpFactor = 16 * dt;
           this.player.renderX += (this.player.gridX - this.player.renderX) * Math.min(1, lerpFactor);
@@ -2278,7 +2419,6 @@
 
         this.player.pulseTimer = (this.player.pulseTimer + dt * 3) % (Math.PI * 2);
 
-        // Trap states update (Dormant -> Warning -> Lethal)
         if (this.maze && this.maze.puzzleEntities) {
           this.maze.puzzleEntities.traps.forEach(trap => {
             trap.phaseTimer = (trap.phaseTimer + dt) % 4.0;
@@ -2292,7 +2432,6 @@
           });
         }
 
-        // Camera lerping to player center
         const targetCamX = (this.player.renderX + 0.5) * this.cellSize - this.viewportWidth / 2;
         const targetCamY = (this.player.renderY + 0.5) * this.cellSize - this.viewportHeight / 2;
 
@@ -2316,7 +2455,6 @@
       const h = this.viewportHeight;
 
       ctx.clearRect(0, 0, w, h);
-
       if (!this.maze) return;
 
       ctx.save();
@@ -2326,7 +2464,6 @@
       const cols = this.maze.width;
       const rows = this.maze.height;
 
-      // Determine visible bounding box for culling
       const startCol = Math.max(0, Math.floor(this.camera.x / cs) - 1);
       const endCol = Math.min(cols - 1, Math.ceil((this.camera.x + w) / cs) + 1);
       const startRow = Math.max(0, Math.floor(this.camera.y / cs) - 1);
@@ -2337,7 +2474,6 @@
       const playerY = this.player.renderY;
       const fogRadius = this.difficulty === 'nightmare' ? 3.0 : 4.0;
 
-      // 1. Draw maze floors & walls
       for (let y = startRow; y <= endRow; y++) {
         for (let x = startCol; x <= endCol; x++) {
           const cell = this.maze.grid[y][x];
@@ -2356,9 +2492,8 @@
               alpha = 1.0 - Math.pow(dist / fogRadius, 3) * 0.45;
             } else if (isExplored) {
               isVisible = false;
-              alpha = 0.22; // dim memory
+              alpha = 0.22;
             } else {
-              // totally unexplored pitch dark
               continue;
             }
           }
@@ -2366,24 +2501,16 @@
           ctx.globalAlpha = alpha;
 
           if (cell === 1) {
-            // WALL
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(px, py, cs, cs);
-
-            // Tech border on walls
             ctx.strokeStyle = isVisible ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.08)';
             ctx.lineWidth = 1;
             ctx.strokeRect(px + 0.5, py + 0.5, cs - 1, cs - 1);
           } else {
-            // CORRIDOR PATH
             ctx.fillStyle = '#070c18';
             ctx.fillRect(px, py, cs, cs);
-
-            // Subtle floor grid dots
             ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
             ctx.fillRect(px + cs / 2 - 1, py + cs / 2 - 1, 2, 2);
-
-            // Puzzle entities
             this.renderCellEntity(ctx, cell, px, py, cs, isVisible);
           }
         }
@@ -2391,7 +2518,6 @@
 
       ctx.globalAlpha = 1.0;
 
-      // 2. Render Path Hint Breadcrumbs (if active)
       if (this.activePathHint && this.activePathHint.length > 0) {
         ctx.save();
         ctx.strokeStyle = 'rgba(0, 240, 255, 0.6)';
@@ -2408,7 +2534,6 @@
         }
         ctx.stroke();
 
-        // Pulsing target indicator on next step
         if (this.activePathHint.length > 1) {
           const nextStep = this.activePathHint[1];
           const nsx = (nextStep.x + 0.5) * cs;
@@ -2421,7 +2546,6 @@
         ctx.restore();
       }
 
-      // 3. Render Exit Portal Vortex
       const exitPx = (this.maze.exitX + 0.5) * cs;
       const exitPy = (this.maze.exitY + 0.5) * cs;
       ctx.save();
@@ -2434,7 +2558,6 @@
       ctx.arc(exitPx, exitPy, cs * 0.8, 0, Math.PI * 2);
       ctx.fill();
 
-      // Spinning vortex ring
       ctx.strokeStyle = '#10b981';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -2442,13 +2565,11 @@
       ctx.stroke();
       ctx.restore();
 
-      // 4. Render Player Avatar
       const plX = (this.player.renderX + 0.5) * cs;
       const plY = (this.player.renderY + 0.5) * cs;
       const playerRadius = cs * 0.32;
 
       ctx.save();
-      // Outer light bloom
       const pGlow = ctx.createRadialGradient(plX, plY, 2, plX, plY, cs * 0.9);
       pGlow.addColorStop(0, 'rgba(0, 240, 255, 0.6)');
       pGlow.addColorStop(0.5, 'rgba(0, 240, 255, 0.15)');
@@ -2458,13 +2579,11 @@
       ctx.arc(plX, plY, cs * 0.9, 0, Math.PI * 2);
       ctx.fill();
 
-      // Inner Core
       ctx.fillStyle = '#00f0ff';
       ctx.beginPath();
       ctx.arc(plX, plY, playerRadius, 0, Math.PI * 2);
       ctx.fill();
 
-      // Shield ring
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -2472,9 +2591,7 @@
       ctx.stroke();
       ctx.restore();
 
-      // 5. Render Particle FX
       this.particles.render(ctx);
-
       ctx.restore();
     }
 
@@ -2482,7 +2599,6 @@
       const cx = px + cs / 2;
       const cy = py + cs / 2;
 
-      // 2, 3, 4: Keys
       if (cell >= 2 && cell <= 4) {
         const colors = { 2: '#00f0ff', 3: '#f59e0b', 4: '#a855f7' };
         const c = colors[cell];
@@ -2492,9 +2608,7 @@
         ctx.fill();
         ctx.fillRect(cx - 1.5, cy - 2, 3, 10);
         ctx.fillRect(cx - 1.5, cy + 4, 4, 2);
-      }
-      // 5, 6, 7: Locked Doors
-      else if (cell >= 5 && cell <= 7) {
+      } else if (cell >= 5 && cell <= 7) {
         const colors = { 5: '#00f0ff', 6: '#f59e0b', 7: '#a855f7' };
         const c = colors[cell];
         ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
@@ -2502,15 +2616,12 @@
         ctx.strokeStyle = c;
         ctx.lineWidth = 3;
         ctx.strokeRect(px + 3, py + 3, cs - 6, cs - 6);
-        // Lock symbol
         ctx.fillStyle = c;
         ctx.fillRect(cx - 4, cy - 2, 8, 7);
         ctx.beginPath();
         ctx.arc(cx, cy - 2, 3.5, Math.PI, 0);
         ctx.stroke();
-      }
-      // 8: Teleporter
-      else if (cell === 8) {
+      } else if (cell === 8) {
         ctx.strokeStyle = '#a855f7';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -2518,9 +2629,7 @@
         ctx.stroke();
         ctx.fillStyle = 'rgba(168, 85, 247, 0.25)';
         ctx.fill();
-      }
-      // 9: Pressure Switch
-      else if (cell === 9) {
+      } else if (cell === 9) {
         ctx.fillStyle = 'rgba(16, 185, 129, 0.3)';
         ctx.fillRect(px + 4, py + 4, cs - 8, cs - 8);
         ctx.strokeStyle = '#10b981';
@@ -2530,9 +2639,7 @@
         ctx.arc(cx, cy, 4, 0, Math.PI * 2);
         ctx.fillStyle = '#10b981';
         ctx.fill();
-      }
-      // 10: Closed Security Gate
-      else if (cell === 10) {
+      } else if (cell === 10) {
         ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
         ctx.fillRect(px + 2, py + 2, cs - 4, cs - 4);
         ctx.strokeStyle = '#ef4444';
@@ -2543,15 +2650,11 @@
         ctx.moveTo(cx, py + 4);
         ctx.lineTo(cx, py + cs - 4);
         ctx.stroke();
-      }
-      // 11: Open Security Gate
-      else if (cell === 11) {
+      } else if (cell === 11) {
         ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
         ctx.lineWidth = 1;
         ctx.strokeRect(px + 4, py + 4, cs - 8, cs - 8);
-      }
-      // 12: Trap (Spikes)
-      else if (cell === 12) {
+      } else if (cell === 12) {
         const trap = this.maze.puzzleEntities.traps.find(t => t.x === Math.floor(px / cs) && t.y === Math.floor(py / cs));
         const state = trap ? trap.state : 'dormant';
         if (state === 'dormant') {
@@ -2570,9 +2673,7 @@
           ctx.lineWidth = 2;
           ctx.strokeRect(px + 2, py + 2, cs - 4, cs - 4);
         }
-      }
-      // 13: Bonus Energy Shard
-      else if (cell === 13) {
+      } else if (cell === 13) {
         ctx.fillStyle = '#10b981';
         ctx.beginPath();
         ctx.moveTo(cx, cy - 6);
@@ -2596,7 +2697,6 @@
       const scaleX = w / cols;
       const scaleY = h / rows;
 
-      // Draw maze walls & corridors
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
           if (this.maze.grid[y][x] === 1) {
@@ -2609,28 +2709,51 @@
         }
       }
 
-      // Exit indicator
       ctx.fillStyle = '#10b981';
       ctx.fillRect(this.maze.exitX * scaleX - 1, this.maze.exitY * scaleY - 1, scaleX + 2, scaleY + 2);
 
-      // Player indicator
       ctx.fillStyle = '#00f0ff';
       ctx.beginPath();
       ctx.arc(
         (this.player.gridX + 0.5) * scaleX,
         (this.player.gridY + 0.5) * scaleY,
-        Math.max(2, scaleX * 0.9),
+        Math.max(2.5, scaleX * 0.9),
         0,
         Math.PI * 2
       );
       ctx.fill();
     }
 
+    // --- CONTINUOUS TOUCH D-PAD WALKING ---
+    startDpadHold(dx, dy, btnElement) {
+      this.stopDpadHold();
+      btnElement.classList.add('pressed');
+      this.handleMove(dx, dy);
+
+      // Delay before continuous walking starts
+      this.holdTimer = setTimeout(() => {
+        this.holdInterval = setInterval(() => {
+          this.handleMove(dx, dy);
+        }, 135);
+      }, 190);
+    }
+
+    stopDpadHold() {
+      if (this.holdTimer) {
+        clearTimeout(this.holdTimer);
+        this.holdTimer = null;
+      }
+      if (this.holdInterval) {
+        clearInterval(this.holdInterval);
+        this.holdInterval = null;
+      }
+      document.querySelectorAll('.dpad-btn').forEach(b => b.classList.remove('pressed'));
+    }
+
     // --- EVENT LISTENERS & UI WIRING ---
     initEvents() {
-      // 1. Keyboard Controls (Arrow Keys & WASD)
+      // 1. Keyboard Controls
       window.addEventListener('keydown', (e) => {
-        // Prevent default scrolling on navigation keys
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
           e.preventDefault();
         }
@@ -2656,7 +2779,7 @@
       }, { passive: false });
 
       this.canvas.addEventListener('touchmove', (e) => {
-        e.preventDefault(); // prevent pull-to-refresh
+        e.preventDefault();
       }, { passive: false });
 
       this.canvas.addEventListener('touchend', (e) => {
@@ -2666,7 +2789,7 @@
           const absDx = Math.abs(dx);
           const absDy = Math.abs(dy);
 
-          if (Math.max(absDx, absDy) > 24) {
+          if (Math.max(absDx, absDy) > 22) {
             if (absDx > absDy) {
               this.handleMove(dx > 0 ? 1 : -1, 0);
             } else {
@@ -2676,29 +2799,56 @@
         }
       });
 
-      // 3. Virtual Mobile D-Pad Buttons
-      const bindDpad = (id, dx, dy) => {
+      // 3. Ergonomic D-Pad Buttons with Hold-to-Walk
+      const bindDpadHold = (id, dx, dy) => {
         const btn = document.getElementById(id);
         if (btn) {
-          const trigger = (e) => {
+          const start = (e) => {
             e.preventDefault();
-            this.handleMove(dx, dy);
+            this.startDpadHold(dx, dy, btn);
           };
-          btn.addEventListener('touchstart', trigger, { passive: false });
-          btn.addEventListener('mousedown', trigger);
+          const end = (e) => {
+            e.preventDefault();
+            this.stopDpadHold();
+          };
+
+          btn.addEventListener('touchstart', start, { passive: false });
+          btn.addEventListener('touchend', end, { passive: false });
+          btn.addEventListener('touchcancel', end, { passive: false });
+
+          btn.addEventListener('mousedown', start);
+          btn.addEventListener('mouseup', end);
+          btn.addEventListener('mouseleave', end);
         }
       };
-      bindDpad('dpad-up', 0, -1);
-      bindDpad('dpad-down', 0, 1);
-      bindDpad('dpad-left', -1, 0);
-      bindDpad('dpad-right', 1, 0);
+      bindDpadHold('dpad-up', 0, -1);
+      bindDpadHold('dpad-down', 0, 1);
+      bindDpadHold('dpad-left', -1, 0);
+      bindDpadHold('dpad-right', 1, 0);
 
-      // 4. Header buttons
-      document.getElementById('btn-hint')?.addEventListener('click', () => this.triggerHint());
-      document.getElementById('btn-minimap')?.addEventListener('click', () => this.toggleMinimap());
-      document.getElementById('btn-restart')?.addEventListener('click', () => this.restartCurrentMaze());
-      document.getElementById('btn-pause')?.addEventListener('click', () => this.togglePause());
-      document.getElementById('btn-home')?.addEventListener('click', () => this.openMainMenu());
+      window.addEventListener('mouseup', () => this.stopDpadHold());
+      window.addEventListener('touchend', () => this.stopDpadHold());
+
+      // 4. Desktop Header & Mobile Floating Quick Action buttons
+      const wireAction = (id, handler) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', handler);
+      };
+
+      wireAction('btn-hint', () => this.triggerHint());
+      wireAction('m-btn-hint', () => this.triggerHint());
+
+      wireAction('btn-minimap', () => this.toggleMinimap());
+      wireAction('m-btn-minimap', () => this.toggleMinimap());
+      wireAction('minimap-card', () => this.toggleMinimap());
+
+      wireAction('btn-restart', () => this.restartCurrentMaze());
+      wireAction('m-btn-restart', () => this.restartCurrentMaze());
+
+      wireAction('btn-pause', () => this.togglePause());
+      wireAction('m-btn-pause', () => this.togglePause());
+
+      wireAction('btn-home', () => this.openMainMenu());
 
       // 5. Main Menu UI
       document.querySelectorAll('.diff-card').forEach(card => {
@@ -2706,46 +2856,37 @@
           document.querySelectorAll('.diff-card').forEach(c => c.classList.remove('selected'));
           card.classList.add('selected');
           this.difficulty = card.dataset.diff;
+          this.vibrate(15);
         });
       });
 
-      document.getElementById('menu-btn-play')?.addEventListener('click', () => {
-        this.startNewGame(this.difficulty, false, false);
-      });
-      document.getElementById('menu-btn-daily')?.addEventListener('click', () => {
-        this.startNewGame('hard', true, false);
-      });
-      document.getElementById('menu-btn-practice')?.addEventListener('click', () => {
-        this.startNewGame(this.difficulty, false, true);
-      });
-      document.getElementById('menu-btn-guide')?.addEventListener('click', () => {
-        this.openModal('modal-guide');
-      });
-      document.getElementById('menu-btn-records')?.addEventListener('click', () => {
+      wireAction('menu-btn-play', () => this.startNewGame(this.difficulty, false, false));
+      wireAction('menu-btn-daily', () => this.startNewGame('hard', true, false));
+      wireAction('menu-btn-practice', () => this.startNewGame(this.difficulty, false, true));
+      wireAction('menu-btn-guide', () => this.openModal('modal-guide'));
+      wireAction('menu-btn-records', () => {
         this.renderRecordsModal();
         this.openModal('modal-records');
       });
-      document.getElementById('menu-btn-settings')?.addEventListener('click', () => {
-        this.openModal('modal-settings');
-      });
+      wireAction('menu-btn-settings', () => this.openModal('modal-settings'));
 
       // 6. Pause Menu UI
-      document.getElementById('pause-btn-resume')?.addEventListener('click', () => this.resumeGame());
-      document.getElementById('pause-btn-restart')?.addEventListener('click', () => this.restartCurrentMaze());
-      document.getElementById('pause-btn-settings')?.addEventListener('click', () => this.openModal('modal-settings'));
-      document.getElementById('pause-btn-menu')?.addEventListener('click', () => this.openMainMenu());
+      wireAction('pause-btn-resume', () => this.resumeGame());
+      wireAction('pause-btn-restart', () => this.restartCurrentMaze());
+      wireAction('pause-btn-settings', () => this.openModal('modal-settings'));
+      wireAction('pause-btn-menu', () => this.openMainMenu());
 
       // 7. Victory Screen UI
-      document.getElementById('victory-btn-next')?.addEventListener('click', () => {
+      wireAction('victory-btn-next', () => {
         const diffs = ['easy', 'normal', 'hard', 'nightmare'];
         const nextIdx = Math.min(diffs.length - 1, diffs.indexOf(this.difficulty) + 1);
         this.startNewGame(diffs[nextIdx], false, false);
       });
-      document.getElementById('victory-btn-menu')?.addEventListener('click', () => this.openMainMenu());
+      wireAction('victory-btn-menu', () => this.openMainMenu());
 
       // 8. Game Over UI
-      document.getElementById('gameover-btn-retry')?.addEventListener('click', () => this.restartCurrentMaze());
-      document.getElementById('gameover-btn-menu')?.addEventListener('click', () => this.openMainMenu());
+      wireAction('gameover-btn-retry', () => this.restartCurrentMaze());
+      wireAction('gameover-btn-menu', () => this.openMainMenu());
 
       // 9. Generic Modal Closers
       document.querySelectorAll('[data-close]').forEach(btn => {
@@ -2759,6 +2900,10 @@
       document.getElementById('setting-sound')?.addEventListener('change', (e) => {
         this.settings.sound = e.target.checked;
         this.audio.enabled = this.settings.sound;
+        StorageManager.saveSettings(this.settings);
+      });
+      document.getElementById('setting-haptics')?.addEventListener('change', (e) => {
+        this.settings.haptics = e.target.checked;
         StorageManager.saveSettings(this.settings);
       });
       document.getElementById('setting-volume')?.addEventListener('input', (e) => {
@@ -2789,8 +2934,49 @@
       });
     }
 
+    initPWA() {
+      // Service worker registration
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+
+      // Check if running as installed standalone PWA
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+
+      const installBtn = document.getElementById('menu-btn-install');
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+      if (!isStandalone) {
+        if (installBtn) {
+          installBtn.style.display = 'flex';
+          installBtn.addEventListener('click', async () => {
+            if (this.deferredInstallPrompt) {
+              this.deferredInstallPrompt.prompt();
+              const { outcome } = await this.deferredInstallPrompt.userChoice;
+              if (outcome === 'accepted') {
+                installBtn.style.display = 'none';
+              }
+              this.deferredInstallPrompt = null;
+            } else if (isIOS) {
+              this.openModal('modal-ios-install');
+            } else {
+              this.showToast('Tap browser menu ⋮ and select "Install app"');
+            }
+          });
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          this.deferredInstallPrompt = e;
+          if (installBtn) installBtn.style.display = 'flex';
+        });
+      }
+    }
+
     applySettings() {
       document.getElementById('setting-sound').checked = this.settings.sound;
+      document.getElementById('setting-haptics').checked = this.settings.haptics;
       document.getElementById('setting-volume').value = this.settings.volume;
       document.getElementById('setting-fog').checked = this.settings.fog;
       document.getElementById('setting-dpad').checked = this.settings.dpad;
@@ -2798,7 +2984,7 @@
 
       const dpad = document.getElementById('touch-dpad');
       if (dpad) {
-        dpad.style.display = this.settings.dpad ? 'grid' : (window.innerWidth <= 768 ? 'grid' : 'none');
+        dpad.style.display = this.settings.dpad ? 'grid' : 'none';
       }
     }
 
@@ -2808,6 +2994,7 @@
       if (card) {
         card.classList.toggle('hidden');
         btn?.classList.toggle('active', !card.classList.contains('hidden'));
+        this.vibrate(15);
       }
     }
 
@@ -2881,7 +3068,6 @@
     }
   }
 
-  // --- INITIALIZE GAME ON DOM READY ---
   window.addEventListener('DOMContentLoaded', () => {
     window.game = new MazeShiftGame();
   });
